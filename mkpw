@@ -1,0 +1,4 @@
+#!/bin/bash
+
+head -c1500 /dev/urandom | base64 -w0 | sed -e "s/[\+\/=]//g" | fold -w76
+echo
