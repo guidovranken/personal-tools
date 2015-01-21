@@ -1,0 +1,3 @@
+#!/bin/bash
+# Lazy way to quickly see all Python module imports in a directory and its subdirectories
+find -name '*.py' -exec grep -h "^[[:space:]]*\(import .*\)\|\(from .* import\)" {} \; | sort | uniq | sed -e 's/^[ \t]*//g'
