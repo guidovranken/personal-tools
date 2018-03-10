@@ -3,4 +3,4 @@
 param1=*.$1
 param2=$2
 param3=$3
-find -name "$param1" -exec grep -H$3 "$param2" {} \;
+find -name "$param1" -type f -exec grep -H$3 "$param2" {} \;
