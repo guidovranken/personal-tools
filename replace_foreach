@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+# Guido Vranken, 2018
+
+import os, sys, hashlib
+
+def unhex(s):
+    slen = len(s)
+    ret = ""
+    i = 0
+    while i < slen:
+        if s[i] == "\\":
+            if i+2 >= slen:
+                print "Invalid hex encoding"
+                exit(0)
+            hex_ = s[i+1] + s[i+2]
+            try:
+                ret += chr(int(hex_, 16))
+            except:
+                print "Invalid hex encoding"
+                exit(0)
+            i += 3
+        else:
+            ret += s[i]
+            i += 1
+    return ret
+
+
+if len(sys.argv) != 5:
+    print "Usage: {} <in file> <out dir> <replace what> <replace with>".format(sys.argv[0])
+    exit(0)
+infile = sys.argv[1]
+outdir = sys.argv[2]
+replace_what = sys.argv[3]
+replace_with = sys.argv[4]
+
+if os.path.isdir(outdir) == False:
+    print "{} is not a directory".format(outdir)
+    exit(0)
+
+replace_what = unhex(replace_what)
+replace_with = unhex(replace_with)
+
+with open(infile, 'rb') as fp:
+    data = fp.read()
+    datalen = len(data)
+    i = 0
+    while i < datalen:
+        if data[i:i+len(replace_what)] == replace_what:
+            replaced = data[:i]
+            replaced += replace_with
+            replaced += data[i+len(replace_what):]
+            sha1hash = hashlib.sha1(replaced).hexdigest()
+            outfile = os.path.join(outdir, sha1hash)
+            print "Write {} ({})".format(outfile, [replaced[:32]])
+            with open(outfile, 'wb') as fpout:
+                fpout.write(replaced)
+        i += 1
