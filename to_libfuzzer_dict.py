@@ -8,6 +8,6 @@ with open(sys.argv[1], 'rb') as fp:
     s = "\""
     for c in data:
         s += "\\x"
-        s += hex(c)[2:]
+        s += hex(c)[2:].zfill(2)
     s += "\""
     print(s)
